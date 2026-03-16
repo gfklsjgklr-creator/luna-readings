@@ -6,18 +6,18 @@ import { Footer } from "@/components/Footer";
 import { ELEMENT_DATA, type Element } from "@/lib/crystals";
 
 const signs = [
-  { symbol: "♈", name: "Aries", key: "aries" },
-  { symbol: "♉", name: "Taurus", key: "taurus" },
-  { symbol: "♊", name: "Gemini", key: "gemini" },
-  { symbol: "♋", name: "Cancer", key: "cancer" },
-  { symbol: "♌", name: "Leo", key: "leo" },
-  { symbol: "♍", name: "Virgo", key: "virgo" },
-  { symbol: "♎", name: "Libra", key: "libra" },
-  { symbol: "♏", name: "Scorpio", key: "scorpio" },
-  { symbol: "♐", name: "Sagittarius", key: "sagittarius" },
-  { symbol: "♑", name: "Capricorn", key: "capricorn" },
-  { symbol: "♒", name: "Aquarius", key: "aquarius" },
-  { symbol: "♓", name: "Pisces", key: "pisces" },
+  { symbol: "♈", name: "Aries", key: "aries", dates: "Mar 21 – Apr 19" },
+  { symbol: "♉", name: "Taurus", key: "taurus", dates: "Apr 20 – May 20" },
+  { symbol: "♊", name: "Gemini", key: "gemini", dates: "May 21 – Jun 20" },
+  { symbol: "♋", name: "Cancer", key: "cancer", dates: "Jun 21 – Jul 22" },
+  { symbol: "♌", name: "Leo", key: "leo", dates: "Jul 23 – Aug 22" },
+  { symbol: "♍", name: "Virgo", key: "virgo", dates: "Aug 23 – Sep 22" },
+  { symbol: "♎", name: "Libra", key: "libra", dates: "Sep 23 – Oct 22" },
+  { symbol: "♏", name: "Scorpio", key: "scorpio", dates: "Oct 23 – Nov 21" },
+  { symbol: "♐", name: "Sagittarius", key: "sagittarius", dates: "Nov 22 – Dec 21" },
+  { symbol: "♑", name: "Capricorn", key: "capricorn", dates: "Dec 22 – Jan 19" },
+  { symbol: "♒", name: "Aquarius", key: "aquarius", dates: "Jan 20 – Feb 18" },
+  { symbol: "♓", name: "Pisces", key: "pisces", dates: "Feb 19 – Mar 20" },
 ];
 
 export default function DailyPage() {
@@ -74,7 +74,8 @@ export default function DailyPage() {
                 }`}
               >
                 <span className="text-3xl block mb-1">{sign.symbol}</span>
-                <span className="text-sm font-medium">{sign.name}</span>
+                <span className="text-sm font-medium block">{sign.name}</span>
+                <span className="text-[10px] text-text-secondary/60 block mt-0.5">{sign.dates}</span>
               </button>
             ))}
           </div>
