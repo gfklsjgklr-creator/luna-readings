@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Footer } from "@/components/Footer";
 
 function ReadingContent() {
@@ -99,7 +100,7 @@ function ReadingContent() {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
-          <div className="text-6xl animate-spin-slow inline-block mb-6">✨</div>
+          <Image src="/luna-portrait.png" alt="Luna" width={100} height={130} className="mx-auto mb-4 rounded-2xl animate-pulse" />
           <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold mb-3">
             Luna is consulting the stars for you...
           </h2>
@@ -173,7 +174,7 @@ export default function CheckoutSuccessPage() {
         fallback={
           <div className="min-h-screen flex items-center justify-center px-6">
             <div className="text-center">
-              <div className="text-6xl animate-spin-slow inline-block mb-6">✨</div>
+              <Image src="/luna-portrait.png" alt="Luna" width={100} height={130} className="mx-auto mb-4 rounded-2xl animate-pulse" />
               <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold mb-3">
                 Luna is consulting the stars for you...
               </h2>

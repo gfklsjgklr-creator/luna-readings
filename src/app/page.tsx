@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Footer } from "@/components/Footer";
 
@@ -126,29 +127,48 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero */}
-      <section className="min-h-screen flex items-center justify-center px-6 py-20 text-center">
-        <div className="max-w-3xl">
-          <span className="inline-block text-gold-soft text-sm tracking-widest uppercase mb-6">
-            ✨ AI-Powered Celestial Guidance
-          </span>
-          <h1 className="font-[family-name:var(--font-heading)] text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Discover What The Stars Reveal About Your Path
-          </h1>
-          <p className="text-text-secondary text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-            Luna is an AI celestial reader who creates deeply personalized astrology readings based
-            on your unique birth chart.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link href="/reading/birth-chart" className="btn-gold text-lg">
-              Get Your Birth Chart Reading — $9.99
-            </Link>
-            <Link href="/reading/daily" className="btn-outline">
-              Try Free Daily Horoscope
-            </Link>
+      <section className="min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="max-w-5xl flex flex-col md:flex-row items-center gap-10 md:gap-16">
+          {/* Luna Image */}
+          <div className="shrink-0 relative">
+            <div className="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-purple/40 shadow-[0_0_60px_rgba(107,76,154,0.3)]">
+              <Image
+                src="/luna-basic.png"
+                alt="Luna — AI Celestial Reader"
+                width={288}
+                height={288}
+                className="object-cover w-full h-full"
+                priority
+              />
+            </div>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-bg-secondary/80 backdrop-blur-sm border border-purple/30 rounded-full px-4 py-1 text-gold text-xs font-semibold whitespace-nowrap">
+              Meet Luna ✨
+            </div>
           </div>
-          <p className="text-text-secondary/60 text-sm">
-            Trusted by seekers worldwide · Instant delivery · 100% personalized
-          </p>
+          {/* Text */}
+          <div className="text-center md:text-left">
+            <span className="inline-block text-gold-soft text-sm tracking-widest uppercase mb-6">
+              ✨ AI-Powered Celestial Guidance
+            </span>
+            <h1 className="font-[family-name:var(--font-heading)] text-4xl md:text-6xl font-bold leading-tight mb-6">
+              Discover What The Stars Reveal About Your Path
+            </h1>
+            <p className="text-text-secondary text-lg md:text-xl mb-10 max-w-2xl">
+              Luna is an AI celestial reader who creates deeply personalized astrology readings based
+              on your unique birth chart.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-8">
+              <Link href="/reading/birth-chart" className="btn-gold text-lg">
+                Get Your Birth Chart Reading — $9.99
+              </Link>
+              <Link href="/reading/daily" className="btn-outline">
+                Try Free Daily Horoscope
+              </Link>
+            </div>
+            <p className="text-text-secondary/60 text-sm">
+              Trusted by seekers worldwide · Instant delivery · 100% personalized
+            </p>
+          </div>
         </div>
       </section>
 
@@ -247,6 +267,29 @@ export default function HomePage() {
 
       <div className="section-divider max-w-4xl mx-auto" />
 
+      {/* Velora Crystal Cross-Promo */}
+      <section className="px-6 py-16 max-w-5xl mx-auto">
+        <div className="glass-card p-8 md:p-10 flex flex-col md:flex-row items-center gap-8" style={{ background: "linear-gradient(135deg, rgba(26,10,46,0.6), rgba(107,76,154,0.1))" }}>
+          <div className="shrink-0 text-5xl">💎</div>
+          <div className="text-center md:text-left flex-1">
+            <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold mb-2">
+              Discover Your Crystal Match
+            </h3>
+            <p className="text-text-secondary mb-4">
+              Take our free Crystal Quiz and find the perfect crystal that resonates with your soul energy. Powered by Velora Crystal.
+            </p>
+            <a
+              href="https://veloracrystal.com/pages/discover-your-crystal-match"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline inline-block"
+            >
+              Take Free Crystal Quiz →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="px-6 py-20">
         <div
@@ -256,6 +299,13 @@ export default function HomePage() {
               "linear-gradient(135deg, rgba(107,76,154,0.2), rgba(26,10,46,0.8))",
           }}
         >
+          <Image
+            src="/luna-crystal.png"
+            alt="Luna holding a crystal"
+            width={160}
+            height={200}
+            className="mx-auto mb-6 rounded-2xl opacity-90"
+          />
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold mb-4">
             Ready to Discover Your Cosmic Blueprint?
           </h2>
