@@ -1,26 +1,185 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg-primary: #0a0015;
+  --color-bg-secondary: #1A0A2E;
+  --color-purple: #6B4C9A;
+  --color-purple-light: #8B6BBF;
+  --color-gold: #FFD700;
+  --color-gold-soft: #F5C842;
+  --color-text-primary: #f0e6ff;
+  --color-text-secondary: #b8a9d4;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+/* Starfield background */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--duration, 3s) ease-in-out infinite var(--delay, 0s);
+}
+
+.star.large {
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 215, 0, 0.6);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(107, 76, 154, 0.08);
+  border: 1px solid rgba(107, 76, 154, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.glass-card:hover {
+  border-color: rgba(107, 76, 154, 0.5);
+  box-shadow: 0 0 30px rgba(107, 76, 154, 0.15);
+}
+
+/* Gold gradient button */
+.btn-gold {
+  background: linear-gradient(135deg, #FFD700, #F5C842);
+  color: #1A0A2E;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+}
+
+/* Outline button */
+.btn-outline {
+  border: 2px solid #6B4C9A;
+  color: #f0e6ff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  background: transparent;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: rgba(107, 76, 154, 0.2);
+  border-color: #8B6BBF;
+}
+
+/* Form styles */
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(107, 76, 154, 0.1);
+  border: 1px solid rgba(107, 76, 154, 0.3);
+  border-radius: 10px;
+  color: #f0e6ff;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #8B6BBF;
+  box-shadow: 0 0 0 3px rgba(107, 76, 154, 0.15);
+}
+
+.form-input::placeholder {
+  color: #b8a9d4;
+  opacity: 0.6;
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+  margin: 3rem 0;
+}
+
+/* Loading spinner */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Reading content styling */
+.reading-content h2 {
+  font-family: var(--font-heading);
+  color: var(--color-gold);
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.reading-content h3 {
+  font-family: var(--font-heading);
+  color: var(--color-purple-light);
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.reading-content p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.reading-content strong {
+  color: var(--color-gold-soft);
+}
+
+.reading-content em {
+  color: var(--color-purple-light);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
 }
