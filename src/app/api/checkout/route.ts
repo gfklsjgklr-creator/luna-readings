@@ -21,6 +21,11 @@ const PRODUCTS: Record<string, { name: string; description: string; amount: numb
     description: "Align your professional path with cosmic wisdom.",
     amount: 1299,
   },
+  crystal_soul: {
+    name: "Crystal Soul Report by Luna",
+    description: "Discover which crystals align with your birth chart and how to use them.",
+    amount: 799,
+  },
 };
 
 export async function POST(request: NextRequest) {

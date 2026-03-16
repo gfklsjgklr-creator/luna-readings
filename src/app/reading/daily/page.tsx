@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
+import { ELEMENT_DATA, type Element } from "@/lib/crystals";
 
 const signs = [
   { symbol: "♈", name: "Aries", key: "aries" },
@@ -22,17 +23,20 @@ const signs = [
 export default function DailyPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [horoscope, setHoroscope] = useState<string | null>(null);
+  const [element, setElement] = useState<Element | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function fetchHoroscope(sign: string) {
     setSelected(sign);
     setHoroscope(null);
+    setElement(null);
     setLoading(true);
 
     try {
       const res = await fetch(`/api/daily?sign=${sign}`);
       const data = await res.json();
       setHoroscope(data.horoscope);
+      setElement(data.element || null);
     } catch {
       setHoroscope("Unable to read the stars right now. Please try again later.");
     } finally {
@@ -41,6 +45,7 @@ export default function DailyPage() {
   }
 
   const selectedSign = signs.find((s) => s.key === selected);
+  const elementData = element ? ELEMENT_DATA[element] : null;
 
   return (
     <main>
@@ -95,18 +100,51 @@ export default function DailyPage() {
             </div>
           )}
 
-          {/* CTA */}
+          {/* FREE: Element Crystal Match */}
+          {horoscope && !loading && elementData && (
+            <div
+              className="glass-card p-6 mt-6 animate-fade-in flex flex-col sm:flex-row items-center gap-4"
+              style={{
+                background: "linear-gradient(135deg, rgba(26,10,46,0.6), rgba(107,76,154,0.1))",
+              }}
+            >
+              <div className="text-4xl shrink-0">{elementData.emoji}</div>
+              <div className="text-center sm:text-left flex-1">
+                <p className="text-text-primary font-semibold text-sm mb-1">
+                  {selectedSign?.name} is a <span style={{ color: elementData.color }}>{elementData.element}</span> sign
+                </p>
+                <p className="text-text-secondary text-sm mb-3">
+                  {elementData.freeDescription}
+                </p>
+                <a
+                  href={elementData.collectionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gold text-sm font-semibold hover:underline"
+                >
+                  {elementData.buttonText} →
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* CTA: Birth Chart + Crystal Soul */}
           {horoscope && !loading && (
-            <div className="glass-card p-8 mt-8 text-center" style={{ background: "linear-gradient(135deg, rgba(107,76,154,0.15), rgba(26,10,46,0.6))" }}>
+            <div className="glass-card p-8 mt-6 text-center" style={{ background: "linear-gradient(135deg, rgba(107,76,154,0.15), rgba(26,10,46,0.6))" }}>
               <p className="text-text-primary font-semibold mb-2">
                 Your daily horoscope only scratches the surface.
               </p>
               <p className="text-text-secondary mb-6">
-                Get your full Birth Chart Reading for a deep dive into your cosmic blueprint.
+                Go deeper with a personalized reading based on your full birth chart.
               </p>
-              <Link href="/reading/birth-chart" className="btn-gold">
-                Get Full Reading — $9.99
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link href="/reading/birth-chart" className="btn-gold">
+                  Birth Chart Reading — $9.99
+                </Link>
+                <Link href="/reading/crystal-soul" className="btn-outline">
+                  Crystal Soul Report — $7.99
+                </Link>
+              </div>
             </div>
           )}
         </div>

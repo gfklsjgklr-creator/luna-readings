@@ -37,6 +37,16 @@ const services = [
     href: "/reading/career",
   },
   {
+    icon: "💎",
+    title: "Crystal Soul Report",
+    price: "$7.99",
+    description:
+      "Discover which crystals are cosmically aligned with your birth chart. Get personalized recommendations, chakra analysis, and crystal rituals.",
+    tag: "New",
+    button: "Get Crystal Report →",
+    href: "/reading/crystal-soul",
+  },
+  {
     icon: "🌙",
     title: "Daily Horoscope",
     price: "FREE",

@@ -10,7 +10,44 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-const readingCache = new Map<string, { reading: string; product_type: string; name: string }>();
+import { SIGN_ELEMENTS, type Element } from "@/lib/crystals";
+
+const readingCache = new Map<string, { reading: string; product_type: string; name: string; element: Element }>();
+
+function extractElement(text: string, formData: Record<string, string | string[]>): { cleanReading: string; element: Element } {
+  // Try to parse ELEMENT:Fire/Earth/Water/Air from end of reading
+  const elementMatch = text.match(/\nELEMENT:(Fire|Earth|Water|Air)\s*$/);
+  if (elementMatch) {
+    return {
+      cleanReading: text.replace(/\nELEMENT:(Fire|Earth|Water|Air)\s*$/, "").trim(),
+      element: elementMatch[1] as Element,
+    };
+  }
+  // Fallback: determine from DOB if available
+  const dob = (formData.dob as string) || (formData.dob1 as string) || "";
+  if (dob) {
+    const month = new Date(dob).getMonth() + 1;
+    const day = new Date(dob).getDate();
+    const sign = getSignFromDate(month, day);
+    return { cleanReading: text.trim(), element: SIGN_ELEMENTS[sign] || "Fire" };
+  }
+  return { cleanReading: text.trim(), element: "Fire" };
+}
+
+function getSignFromDate(month: number, day: number): string {
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "aries";
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "taurus";
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "gemini";
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "cancer";
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "leo";
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "virgo";
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "libra";
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "scorpio";
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "sagittarius";
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "capricorn";
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "aquarius";
+  return "pisces";
+}
 
 const LUNA_SYSTEM_PROMPT = `You are Luna, a wise and mystical AI celestial reader. You have an ethereal presence — long purple hair cascading like starlight, a midnight blue robe adorned with golden constellation patterns, and an amethyst pendant that seems to pulse with cosmic energy.
 
@@ -36,7 +73,15 @@ Format rules:
 - Sections should flow naturally, not feel like a checklist
 - Reading length: 800-1200 words
 - Write in English
-- Address the seeker by name if provided, otherwise use "Dear Seeker"`;
+- Address the seeker by name if provided, otherwise use "Dear Seeker"
+
+CRITICAL FORMAT RULE:
+At the very end of your reading, on a new line, output exactly one of these tags based on the dominant element in the seeker's chart:
+ELEMENT:Fire
+ELEMENT:Earth
+ELEMENT:Water
+ELEMENT:Air
+This line will be parsed programmatically and removed from the display. Always include it.`;
 
 function buildPrompt(productType: string, formData: Record<string, string | string[]>): string {
   switch (productType) {
@@ -100,6 +145,32 @@ Structure your reading:
 
 If they shared their current situation, address it directly with astrological insight.`;
 
+    case "crystal_soul":
+      return `Generate a Crystal Soul Report for:
+
+Name: ${formData.name || "Dear Seeker"}
+Date of Birth: ${formData.dob}
+Time of Birth: ${formData.birthTime || "Unknown"}
+Place of Birth: ${formData.birthPlace}
+Crystal Experience: ${formData.crystalExperience || "beginner"}
+Intention/Seeking: ${formData.intention || "General guidance"}
+
+This is a PREMIUM crystal-astrology report. Go deep into the connection between their birth chart and crystal healing.
+
+Structure your report:
+1. 💎 Crystal Soul Overview — Their dominant element and how it connects to crystal energy. Explain the astrological basis.
+2. 🔮 Your Cosmic Crystal Companions — Recommend 3-5 SPECIFIC crystals that align with their chart. For EACH crystal:
+   - Crystal name and its astrological connection (which planet/sign/aspect it resonates with in THEIR chart)
+   - Why this crystal is specifically powerful for them (not generic — tie it to their birth data)
+   - How to use it: meditation technique, wearing suggestion, or home placement advice
+3. ⚡ Chakra & Planetary Alignment — Which chakras are most active/blocked based on their chart, and which crystals address each
+4. 🌙 Crystal Rituals — 2-3 specific rituals using their recommended crystals (include moon phase timing)
+5. ✨ Luna's Crystal Wisdom — Personalized advice on building their crystal practice based on their experience level and intentions
+6. 🌠 Crystal Affirmation — A closing mantra for their crystal practice
+
+Reading length: 1000-1500 words. Be specific to their chart. This is a paid premium report — make it worth every penny.
+Reference real crystal properties and real astrological placements.`;
+
     default:
       return "Generate a general astrology reading.";
   }
@@ -128,17 +199,19 @@ export async function GET(request: NextRequest) {
     const formData = JSON.parse(session.metadata?.form_data || "{}");
     const prompt = buildPrompt(productType, formData);
 
+    const maxTokens = productType === "crystal_soul" ? 3000 : 2000;
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 2000,
+      max_tokens: maxTokens,
       system: LUNA_SYSTEM_PROMPT,
       messages: [{ role: "user", content: prompt }],
     });
 
-    const reading = response.content[0].type === "text" ? response.content[0].text : "";
+    const rawReading = response.content[0].type === "text" ? response.content[0].text : "";
     const name = formData.name || formData.name1 || "";
+    const { cleanReading, element } = extractElement(rawReading, formData);
 
-    const result = { reading, product_type: productType, name };
+    const result = { reading: cleanReading, product_type: productType, name, element };
     readingCache.set(sessionId, result);
 
     return NextResponse.json(result);

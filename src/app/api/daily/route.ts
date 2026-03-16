@@ -7,6 +7,8 @@ const anthropic = new Anthropic({
 
 const dailyCache = new Map<string, string>();
 
+import { SIGN_ELEMENTS } from "@/lib/crystals";
+
 const SIGN_NAMES: Record<string, string> = {
   aries: "Aries",
   taurus: "Taurus",
@@ -63,7 +65,8 @@ End with a subtle hint: "Want to go deeper? Your full birth chart reading reveal
     const horoscope = response.content[0].type === "text" ? response.content[0].text : "";
     dailyCache.set(cacheKey, horoscope);
 
-    return NextResponse.json({ horoscope, sign, date: today });
+    const element = SIGN_ELEMENTS[sign] || "Fire";
+    return NextResponse.json({ horoscope, sign, date: today, element });
   } catch (error) {
     console.error("Daily horoscope error:", error);
     return NextResponse.json(
