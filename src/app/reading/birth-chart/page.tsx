@@ -43,10 +43,15 @@ export default function BirthChartPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      const { url } = await res.json();
-      if (url) window.location.href = url;
-    } catch {
-      alert("Something went wrong. Please try again.");
+      const result = await res.json();
+      if (result.url) {
+        window.location.href = result.url;
+      } else {
+        alert("Error: " + (result.error || "No checkout URL returned"));
+        setLoading(false);
+      }
+    } catch (err) {
+      alert("Network error: " + (err instanceof Error ? err.message : String(err)));
       setLoading(false);
     }
   }
